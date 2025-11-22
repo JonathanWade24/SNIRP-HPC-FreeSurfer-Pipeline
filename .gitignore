@@ -1,0 +1,63 @@
+# Nextflow
+.nextflow/
+.nextflow.log*
+work/
+.nextflow.log
+timeline*.html
+report*.html
+trace*.txt
+dag*.html
+
+# Data directories
+bids/
+dicom/
+nii/
+downloaded_images/
+
+# Output directories
+fs_outputs/
+long_outputs/
+qc/
+stats/
+logs/
+
+# Containers (too large for git)
+images/*.sif
+images/*.img
+
+# FreeSurfer license (private)
+fs_license/license.txt
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+*.egg-info/
+dist/
+build/
+
+# Java
+*.class
+*.jar
+*.war
+
+# OS
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Dataset-specific files
+ADNI*.csv
+*subject_info.csv
+file_list.txt
+
+# Temporary files
+*.tmp
+*.bak
+*.log
