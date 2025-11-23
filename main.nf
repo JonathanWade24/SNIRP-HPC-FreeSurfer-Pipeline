@@ -269,12 +269,17 @@ process FASTSURFER_LONG_BASE {
     script:
     def tp_flags = timepoint_ids.collect { "-tp ${it}" }.join(' ')
     """
-    # Create base template directory
-    mkdir -p ${base_id}
-    
-    # Copy timepoint data
-    ${timepoint_ids.collect { "cp -r ${it} ." }.join('\n    ')}
-    
+    # Load FreeSurfer module
+    module load neurocontainers
+    module load freesurfer
+
+    # Set FreeSurfer license
+    export FS_LICENSE=${params.license}
+
+    # Timepoint directories are already staged by Nextflow
+    # Just verify they exist
+    ${timepoint_ids.collect { "ls -d ${it} > /dev/null" }.join('\n    ')}
+
     # Run longitudinal base creation
     recon-all \
         -base ${base_id} \
@@ -283,7 +288,7 @@ process FASTSURFER_LONG_BASE {
         -sd . \
         -parallel \
         -openmp ${params.threads}
-    
+
     echo "Longitudinal base template created for ${base_id}"
     """
 }
@@ -305,10 +310,18 @@ process FASTSURFER_LONG_TP {
     
     script:
     """
-    # Copy required directories
-    cp -r ${timepoint_dir} .
-    cp -r ${base_dir} .
-    
+    # Load FreeSurfer module
+    module load neurocontainers
+    module load freesurfer
+
+    # Set FreeSurfer license
+    export FS_LICENSE=${params.license}
+
+    # Directories are already staged by Nextflow
+    # Just verify they exist
+    ls -d ${timepoint_id} > /dev/null
+    ls -d ${base_id} > /dev/null
+
     # Run longitudinal timepoint processing
     recon-all \
         -long ${timepoint_id} ${base_id} \
@@ -316,7 +329,7 @@ process FASTSURFER_LONG_TP {
         -sd . \
         -parallel \
         -openmp ${params.threads}
-    
+
     echo "Longitudinal processing completed for ${timepoint_id}"
     """
 }
